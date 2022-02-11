@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CBOR & CDDL Tool</title>
+    <link rel="preconnect" href="//fonts.googleapis.com">
+    <link rel="preconnect" href="//fonts.gstatic.com" crossorigin>
+    <link href="//fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet"> 
+    <link type="text/css" rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="title">CBOR & CDDL Tool</h1>
+        <div class="buttons">
+          <button id="run-convert">☛ HEX TO JSON</button>
+          <button id="run-validate">☛ VALIDATE</button>
+        </div>
+      </header>
+      <main class="main">
+        <div class="main-top box">
+          <label for="input-hex">☀ [IN] CBOR (HEX)</label>
+          <textarea class="input-hex" id="input-hex"></textarea>
+        </div>
+        <div class="main-inner">
+          <div class="main-left box">
+            <label for="output-json">☀ [OUT] JSON</label>
+            <textarea class="output-json" id="output-json" readonly></textarea>
+          </div>
+          <div class="main-right box">
+            <label for="input-cddl">☀ [IN] CDDL</label>
+            <textarea class="input-cddl" id="input-cddl"></textarea>
+          </div>
+        </div>
+        <div class="main-bottom box">
+          <label for="output-validation">☀ [OUT] VALIDATION</label>
+          <textarea class="output-validation" id="output-validation" readonly></textarea>
+        </div>
+      </main>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
