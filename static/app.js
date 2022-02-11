@@ -39,6 +39,7 @@ const request = (path, data) => {
 };
 
 const convert = (hex) => {
+  document.getElementById('output-json').value = '';
   request(['api', 'convert'], { hex }).then(({ result }) => {
     document.getElementById('output-json').value = JSON.stringify(result, null, 2);
   }).catch(() => {
@@ -47,6 +48,7 @@ const convert = (hex) => {
 };
 
 const validate = (hex, cddl) => {
+  document.getElementById('output-validation').value = '';
   request(['api', 'validate'], { hex, cddl }).then(({ result }) => {
     document.getElementById('output-validation').value = result;
   }).catch(() => {
