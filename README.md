@@ -1,6 +1,6 @@
 # cbor-tool
 
-Tool to inspect and validate CBOR via CDDL.
+Tool to inspect hex-encoded [CBOR](https://cbor.io/) data and validate it against [CDDL](https://datatracker.ietf.org/doc/html/rfc8610) schemata.
 
 ## Usage
 
