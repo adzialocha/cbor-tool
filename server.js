@@ -9,6 +9,7 @@ const TIMEOUT = 1000 * 10; // in ms
 const PORT = 3000;
 
 const app = express();
+app.use(express.json());
 app.use("/", express.static(path.join(__dirname, "static")));
 
 app.post("/api/convert", (req, res) => {
