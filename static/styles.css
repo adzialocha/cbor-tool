@@ -24,14 +24,6 @@ label {
   padding: 5px;
 }
 
-button {
-  border: 0;
-  outline: 0;
-  background-color: #999;
-  cursor: pointer;
-  padding: 5px;
-}
-
 .title {
   font-size: 20px;
 }
