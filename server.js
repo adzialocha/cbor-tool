@@ -4,7 +4,6 @@ const { exec } = require("child_process");
 const cbor = require("cbor");
 const express = require("express");
 const tmp = require("tmp-file");
-const { json } = require("express/lib/response");
 
 const TIMEOUT = 1000 * 10; // in ms
 const PORT = 3000;
