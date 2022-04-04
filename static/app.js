@@ -11,7 +11,7 @@ const debounce = (func, timeout = 300) => {
 const store = debounce(() => {
   const cddl = elements["input-cddl"].value;
   window.localStorage.setItem("cddl", cddl);
-})();
+});
 
 const load = () => {
   const cddl = window.localStorage.getItem("cddl");
@@ -52,7 +52,7 @@ const request = async (path, data) => {
     });
 };
 
-const toJSON = async (hex) => {
+const toJSON = debounce(async (hex) => {
   elements["value-json"].value = "";
 
   return request(["api", "toJSON"], { hex })
@@ -62,9 +62,9 @@ const toJSON = async (hex) => {
     .catch((error) => {
       elements["value-json"].value = `Something went wrong! ${error}`;
     });
-};
+});
 
-const toCBOR = async (json) => {
+const toCBOR = debounce(async (json) => {
   elements["value-hex"].value = "";
 
   return request(["api", "toCBOR"], { json })
@@ -74,9 +74,9 @@ const toCBOR = async (json) => {
     .catch((error) => {
       elements["value-hex"].value = `Something went wrong!\n\n${error.message}`;
     });
-};
+});
 
-const validate = async (hex, cddl) => {
+const validate = debounce(async (hex, cddl) => {
   elements["output-validation"].value = "";
 
   return request(["api", "validate"], { hex, cddl })
@@ -86,28 +86,30 @@ const validate = async (hex, cddl) => {
     .catch((error) => {
       elements["output-validation"].value = `Something went wrong! ${error}`;
     });
-};
+});
 
-elements["value-hex"].addEventListener("keyup", async () => {
+elements["value-hex"].addEventListener("keyup", () => {
   const hex = elements["value-hex"].value;
 
   if (!hex) {
     elements["value-json"].value = ""
     return;
   }
-  elements["value-json"].value = "tasting cbor..."
-  debounce(toJSON)(hex);
+
+  elements["value-json"].value = "Testing CBOR ..."
+  toJSON(hex);
 })
 
-elements["value-json"].addEventListener("keyup", async () => {
+elements["value-json"].addEventListener("keyup", () => {
   const json = elements["value-json"].value;
 
   if (!json) {
     elements["value-hex"].value = ""
     return;
   }
-  elements["value-hex"].value = "tasting json..."
-  debounce(toCBOR)(json);
+
+  elements["value-hex"].value = "Testing JSON ..."
+  toCBOR(json);
 })
 
 elements["input-cddl"].addEventListener("keyup", async () => {
@@ -119,8 +121,8 @@ elements["input-cddl"].addEventListener("keyup", async () => {
     return;
   }
 
-  elements["output-validation"].value = "validating..."
-  debounce(validate)(hex, cddl);
+  elements["output-validation"].value = "Validating ..."
+  validate(hex, cddl);
 })
 
 elements["input-cddl"].addEventListener("input", store);
