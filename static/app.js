@@ -22,8 +22,8 @@ const load = () => {
 
 const elements = [
   "input-cddl",
-  "input-hex",
-  "output-json",
+  "value-hex",
+  "value-json",
   "output-validation",
   "run-convert",
   "run-validate",
@@ -43,62 +43,87 @@ const request = async (path, data) => {
     })
     .then((result) => {
       if (result.status !== 200) {
-        throw Error(`${result.status} "${result.statusText}"`);
+        throw Error(result.statusText);
       }
       return result.json();
     })
     .catch((error) => {
-      window.alert(`Something went wrong! ${error}`);
       return Promise.reject(error);
     });
 };
 
-const convert = async (hex) => {
-  elements["output-json"].value = "";
+const toJSON = debounce(async (hex) => {
+  elements["value-json"].value = "";
 
-  return request(["api", "convert"], { hex })
+  return request(["api", "toJSON"], { hex })
     .then(({ result }) => {
-      elements["output-json"].value = JSON.stringify(result, null, 2);
+      elements["value-json"].value = JSON.stringify(result, null, 2);
     })
-    .catch(() => {
-      // Do nothing
+    .catch((error) => {
+      elements["value-json"].value = `Something went wrong! ${error}`;
     });
-};
+});
 
-const validate = async (hex, cddl) => {
+const toCBOR = debounce(async (json) => {
+  elements["value-hex"].value = "";
+
+  return request(["api", "toCBOR"], { json })
+    .then(({ result }) => {
+      elements["value-hex"].value = result;
+    })
+    .catch((error) => {
+      elements["value-hex"].value = `Something went wrong!\n\n${error.message}`;
+    });
+});
+
+const validate = debounce(async (hex, cddl) => {
   elements["output-validation"].value = "";
 
   return request(["api", "validate"], { hex, cddl })
     .then(({ result }) => {
       elements["output-validation"].value = result;
     })
-    .catch(() => {
-      // Do nothing
+    .catch((error) => {
+      elements["output-validation"].value = `Something went wrong! ${error}`;
     });
-};
+});
 
-elements["run-convert"].addEventListener("click", async () => {
-  const hex = elements["input-hex"].value;
+elements["value-hex"].addEventListener("keyup", () => {
+  const hex = elements["value-hex"].value;
 
   if (!hex) {
-    window.alert("CBOR (HEX) input is empty.");
+    elements["value-json"].value = ""
     return;
   }
 
-  await convert(hex);
-});
+  elements["value-json"].value = "Testing CBOR ..."
+  toJSON(hex);
+})
 
-elements["run-validate"].addEventListener("click", async () => {
-  const hex = elements["input-hex"].value;
+elements["value-json"].addEventListener("keyup", () => {
+  const json = elements["value-json"].value;
+
+  if (!json) {
+    elements["value-hex"].value = ""
+    return;
+  }
+
+  elements["value-hex"].value = "Testing JSON ..."
+  toCBOR(json);
+})
+
+elements["input-cddl"].addEventListener("keyup", async () => {
+  const hex = elements["value-hex"].value;
   const cddl = elements["input-cddl"].value;
 
   if (!hex || !cddl) {
-    window.alert("CBOR (HEX) or CDDL input is empty.");
+    elements["output-validation"].value = "CBOR (HEX) or CDDL input is empty.";
     return;
   }
 
-  await validate(hex, cddl);
-});
+  elements["output-validation"].value = "Validating ..."
+  validate(hex, cddl);
+})
 
 elements["input-cddl"].addEventListener("input", store);
 
